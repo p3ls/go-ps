@@ -33,6 +33,10 @@ func (p *UnixProcess) Executable() string {
 	return p.binary
 }
 
+func (p *UnixProcess) State() rune {
+	return p.state
+}
+
 func findProcess(pid int) (Process, error) {
 	dir := fmt.Sprintf("/proc/%d", pid)
 	_, err := os.Stat(dir)
