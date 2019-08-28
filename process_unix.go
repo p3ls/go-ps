@@ -19,6 +19,7 @@ type UnixProcess struct {
 	sid   int
 
 	binary string
+	vsize int64
 }
 
 func (p *UnixProcess) Pid() int {
@@ -35,6 +36,10 @@ func (p *UnixProcess) Executable() string {
 
 func (p *UnixProcess) State() rune {
 	return p.state
+}
+
+func (p *UnixProcess) Vsize() int64 {
+	return p.vsize
 }
 
 func findProcess(pid int) (Process, error) {

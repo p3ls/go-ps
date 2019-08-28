@@ -4,6 +4,7 @@ package ps
 
 import (
 	"fmt"
+	"strconv"
 	"io/ioutil"
 	"strings"
 )
@@ -17,11 +18,19 @@ func (p *UnixProcess) Refresh() error {
 	}
 
 	// First, parse out the image name
-	data := string(dataBytes)
-	binStart := strings.IndexRune(data, '(') + 1
+	data := string(dataBytes)	
+	fields := strings.Fields(data)		
+	vszBytes, err := strconv.ParseInt(fields[22], 10, 64)
+	if err != nil {
+		p.vsize = -1
+	} else {
+		p.vsize = vszBytes/1024/1024
+	}
+	
+	binStart := strings.IndexRune(data, '(') + 1	
 	binEnd := strings.IndexRune(data[binStart:], ')')
 	p.binary = data[binStart : binStart+binEnd]
-
+    
 	// Move past the image name and start parsing the rest
 	data = data[binStart+binEnd+2:]
 	_, err = fmt.Sscanf(data,
@@ -31,5 +40,6 @@ func (p *UnixProcess) Refresh() error {
 		&p.pgrp,
 		&p.sid)
 
+	
 	return err
 }

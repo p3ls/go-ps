@@ -21,6 +21,8 @@ type Process interface {
 	Executable() string
 
 	State() rune
+
+	Vsize() int64	
 }
 
 // Processes returns all processes.
